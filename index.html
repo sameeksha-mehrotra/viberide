@@ -378,6 +378,250 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .fade-in { animation: fadeIn 0.3s ease forwards; }
+
+    /* ── Live Ride Tracker ── */
+    .tracker-wrap { animation: fadeIn 0.4s ease forwards; }
+
+    .tracker-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 3px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .tracker-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #a78bfa);
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    .tracker-phase {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .tracker-phase-text {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .tracker-phase-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* SVG Map */
+    .tracker-map-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .tracker-map-container svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .tracker-grid-line { stroke: var(--border); stroke-width: 0.5; }
+    .tracker-route {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 8 4;
+      opacity: 0.6;
+    }
+    .tracker-route-travelled {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      opacity: 1;
+    }
+    .tracker-street-label {
+      fill: var(--muted);
+      font-size: 5px;
+      font-family: inherit;
+      opacity: 0.5;
+    }
+    .tracker-marker-pickup, .tracker-marker-dropoff {
+      filter: drop-shadow(0 0 4px rgba(124, 92, 252, 0.5));
+    }
+
+    /* Car icon */
+    .tracker-car {
+      transition: transform 0.1s linear;
+    }
+
+    /* Pulse ring around car */
+    @keyframes pulse-ring {
+      0% { r: 6; opacity: 0.6; }
+      100% { r: 16; opacity: 0; }
+    }
+    .tracker-pulse {
+      fill: var(--accent);
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+
+    /* ETA section */
+    .tracker-eta-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+    .tracker-eta-ring {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+    }
+    .tracker-eta-ring svg { width: 72px; height: 72px; }
+    .tracker-eta-bg {
+      fill: none;
+      stroke: var(--surface2);
+      stroke-width: 4;
+    }
+    .tracker-eta-fg {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 4;
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+    .tracker-eta-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .tracker-eta-text .unit {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .tracker-eta-info {
+      text-align: left;
+    }
+    .tracker-eta-info .label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tracker-eta-info .locations {
+      font-size: 14px;
+      margin-top: 4px;
+      line-height: 1.6;
+    }
+    .tracker-eta-info .loc-icon {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .tracker-eta-info .loc-icon.from { background: var(--accent); }
+    .tracker-eta-info .loc-icon.to { background: var(--green); }
+
+    /* Driver info strip */
+    .tracker-driver-strip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .tracker-driver-strip .avatar {
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+    }
+    .tracker-driver-strip .info { flex: 1; }
+    .tracker-driver-strip .name { font-size: 15px; font-weight: 600; }
+    .tracker-driver-strip .vehicle-text { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .tracker-driver-strip .vibe-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(124, 92, 252, 0.15);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .tracker-contact-btn {
+      padding: 8px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tracker-contact-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Arrived state */
+    .tracker-arrived {
+      text-align: center;
+      animation: fadeIn 0.5s ease forwards;
+    }
+    .tracker-arrived .big-check {
+      font-size: 56px;
+      margin-bottom: 8px;
+    }
+    @keyframes bounce-in {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .tracker-arrived .big-check { animation: bounce-in 0.5s ease forwards; }
+    .tracker-summary {
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      text-align: left;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .tracker-summary strong { color: var(--accent); }
+
+    .tracker-vibe-rating {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .tracker-vibe-rating button {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface2);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tracker-vibe-rating button:hover,
+    .tracker-vibe-rating button.active {
+      border-color: var(--accent);
+      background: rgba(124, 92, 252, 0.15);
+      transform: scale(1.15);
+    }
   </style>
 </head>
 <body>
@@ -425,7 +669,7 @@
       <button class="btn-secondary" onclick="backToRequest()">Change preferences</button>
     </div>
 
-    <!-- Step 3: Confirmation -->
+    <!-- Step 3: Confirmation (brief, then auto-transitions to tracker) -->
     <div id="rider-step3" style="display:none">
       <div class="confirm-box fade-in">
         <div class="checkmark">&#10003;</div>
@@ -433,6 +677,151 @@
         <p style="color:var(--muted); font-size:14px; margin-bottom:8px;">Your driver is on the way</p>
         <div class="confirm-details" id="confirm-details"></div>
         <button class="btn-primary" onclick="backToRequest()">Book Another Ride</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Live Ride Tracker -->
+    <div id="rider-step4" style="display:none">
+      <div class="tracker-wrap">
+
+        <!-- Progress bar -->
+        <div class="tracker-progress-bar">
+          <div class="tracker-progress-fill" id="tracker-progress"></div>
+        </div>
+
+        <!-- Phase text -->
+        <div class="tracker-phase">
+          <div class="tracker-phase-text" id="tracker-phase-text">Driver is heading to you</div>
+          <div class="tracker-phase-sub" id="tracker-phase-sub">Sit tight, they'll be there soon</div>
+        </div>
+
+        <!-- SVG Map -->
+        <div class="tracker-map-container">
+          <svg id="tracker-map" viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid streets -->
+            <line x1="0" y1="60" x2="500" y2="60" class="tracker-grid-line"/>
+            <line x1="0" y1="120" x2="500" y2="120" class="tracker-grid-line"/>
+            <line x1="0" y1="180" x2="500" y2="180" class="tracker-grid-line"/>
+            <line x1="0" y1="240" x2="500" y2="240" class="tracker-grid-line"/>
+            <line x1="80" y1="0" x2="80" y2="300" class="tracker-grid-line"/>
+            <line x1="170" y1="0" x2="170" y2="300" class="tracker-grid-line"/>
+            <line x1="260" y1="0" x2="260" y2="300" class="tracker-grid-line"/>
+            <line x1="350" y1="0" x2="350" y2="300" class="tracker-grid-line"/>
+            <line x1="440" y1="0" x2="440" y2="300" class="tracker-grid-line"/>
+
+            <!-- Street labels -->
+            <text x="120" y="56" class="tracker-street-label">Oak Ave</text>
+            <text x="210" y="116" class="tracker-street-label">Main St</text>
+            <text x="300" y="176" class="tracker-street-label">Elm Dr</text>
+            <text x="84" y="150" class="tracker-street-label" transform="rotate(90, 84, 150)">1st St</text>
+            <text x="264" y="90" class="tracker-street-label" transform="rotate(90, 264, 90)">3rd St</text>
+            <text x="444" y="150" class="tracker-street-label" transform="rotate(90, 444, 150)">5th St</text>
+
+            <!-- Buildings (decorative rectangles) -->
+            <rect x="90" y="68" width="30" height="20" rx="2" fill="#1e1e36" stroke="var(--border)" stroke-width="0.5"/>
+            <rect x="130" y="68" width="25" height="20" rx="2" fill="#1e1e36" stroke="var(--border)" stroke-width="0.5"/>
+            <rect x="185" y="128" width="35" height="22" rx="2" fill="#1e1e36" stroke="var(--border)" stroke-width="0.5"/>
+            <rect x="275" y="68" width="28" height="18" rx="2" fill="#1e1e36" stroke="var(--border)" stroke-width="0.5"/>
+            <rect x="360" y="128" width="32" height="20" rx="2" fill="#1e1e36" stroke="var(--border)" stroke-width="0.5"/>
+            <rect x="360" y="188" width="40" height="24" rx="2" fill="#1e1e36" stroke="var(--border)" stroke-width="0.5"/>
+            <rect x="185" y="188" width="28" height="22" rx="2" fill="#1e1e36" stroke="var(--border)" stroke-width="0.5"/>
+            <rect x="90" y="190" width="35" height="18" rx="2" fill="#1e1e36" stroke="var(--border)" stroke-width="0.5"/>
+
+            <!-- Route path (the car follows this) -->
+            <path id="tracker-route-path"
+              d="M 60,250 L 80,250 L 80,180 L 170,180 L 170,120 L 260,120 L 260,60 L 350,60 L 440,60 L 440,50"
+              class="tracker-route"/>
+
+            <!-- Travelled portion (drawn progressively) -->
+            <path id="tracker-route-done"
+              d="M 60,250 L 80,250 L 80,180 L 170,180 L 170,120 L 260,120 L 260,60 L 350,60 L 440,60 L 440,50"
+              class="tracker-route-travelled"
+              stroke-dasharray="0 9999"/>
+
+            <!-- Pickup marker -->
+            <g class="tracker-marker-pickup">
+              <circle cx="60" cy="250" r="7" fill="var(--accent)" opacity="0.3"/>
+              <circle cx="60" cy="250" r="4" fill="var(--accent)"/>
+              <text x="60" y="272" text-anchor="middle" fill="var(--accent)" font-size="7" font-weight="600">PICKUP</text>
+            </g>
+
+            <!-- Drop-off marker -->
+            <g class="tracker-marker-dropoff">
+              <circle cx="440" cy="50" r="7" fill="var(--green)" opacity="0.3"/>
+              <circle cx="440" cy="50" r="4" fill="var(--green)"/>
+              <text x="440" y="40" text-anchor="middle" fill="var(--green)" font-size="7" font-weight="600">DROP-OFF</text>
+            </g>
+
+            <!-- Pulse ring (animated) -->
+            <circle id="tracker-pulse" cx="60" cy="250" r="6" class="tracker-pulse"/>
+
+            <!-- Car icon -->
+            <g id="tracker-car" class="tracker-car">
+              <rect x="-10" y="-6" width="20" height="12" rx="4" fill="var(--accent)"/>
+              <rect x="-7" y="-4" width="6" height="8" rx="1.5" fill="rgba(255,255,255,0.3)"/>
+              <rect x="1" y="-4" width="6" height="8" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+              <circle cx="-6" cy="7" r="2.5" fill="#444"/>
+              <circle cx="6" cy="7" r="2.5" fill="#444"/>
+              <circle cx="-6" cy="7" r="1.2" fill="#666"/>
+              <circle cx="6" cy="7" r="1.2" fill="#666"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- ETA row -->
+        <div class="tracker-eta-row">
+          <div class="tracker-eta-ring">
+            <svg viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="30" class="tracker-eta-bg"/>
+              <circle cx="36" cy="36" r="30" class="tracker-eta-fg" id="tracker-eta-ring"
+                stroke-dasharray="188.5" stroke-dashoffset="0"/>
+            </svg>
+            <div class="tracker-eta-text">
+              <span id="tracker-eta-min">5</span><br>
+              <span class="unit">min</span>
+            </div>
+          </div>
+          <div class="tracker-eta-info">
+            <div class="label">Your trip</div>
+            <div class="locations">
+              <span class="loc-icon from"></span><span id="tracker-from">Pickup</span><br>
+              <span class="loc-icon to"></span><span id="tracker-to">Drop-off</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Driver strip -->
+        <div class="tracker-driver-strip">
+          <div class="avatar" id="tracker-driver-avatar" style="background:var(--accent)">D</div>
+          <div class="info">
+            <div class="name" id="tracker-driver-name">Driver</div>
+            <div class="vehicle-text" id="tracker-driver-vehicle">Vehicle</div>
+          </div>
+          <span class="vibe-tag" id="tracker-driver-vibe">Vibe</span>
+          <button class="tracker-contact-btn" onclick="showToast('Calling driver...')">Call</button>
+        </div>
+
+        <button class="btn-secondary" onclick="cancelTracking()">Cancel Ride</button>
+
+        <!-- Arrived overlay (hidden until trip ends) -->
+        <div id="tracker-arrived" style="display:none">
+          <div class="tracker-arrived">
+            <div class="big-check">&#127881;</div>
+            <h3>You've arrived!</h3>
+            <p style="color:var(--muted); font-size:14px;">Hope you enjoyed the vibe</p>
+            <div class="tracker-summary" id="tracker-summary"></div>
+            <p style="font-size:14px; font-weight:600; margin-bottom:8px;">Rate the vibe</p>
+            <div class="tracker-vibe-rating" id="tracker-rating">
+              <button onclick="rateVibe(this,1)">1</button>
+              <button onclick="rateVibe(this,2)">2</button>
+              <button onclick="rateVibe(this,3)">3</button>
+              <button onclick="rateVibe(this,4)">4</button>
+              <button onclick="rateVibe(this,5)">5</button>
+            </div>
+            <button class="btn-primary" onclick="backToRequest()">Book Another Ride</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -617,28 +1006,204 @@ function findDrivers() {
   document.getElementById('rider-step2').style.display = 'block';
 }
 
+// ── Tracking state ──
+let trackingInterval = null;
+let trackingDriver = null;
+
 function confirmRide(driverName, vehicle, rating) {
   const pickup = document.getElementById('pickup').value.trim();
   const dropoff = document.getElementById('dropoff').value.trim();
   const vibeDef = VIBES.find(v => v.id === riderVibe);
+  const driverData = DRIVERS.find(d => d.name === driverName);
 
-  document.getElementById('confirm-details').innerHTML = `
-    <strong>Driver:</strong> ${driverName}<br>
-    <strong>Vehicle:</strong> ${vehicle}<br>
-    <strong>Rating:</strong> &#9733; ${rating}<br>
+  // Skip static confirmation — go straight to live tracker
+  document.getElementById('rider-step2').style.display = 'none';
+  document.getElementById('rider-step4').style.display = 'block';
+
+  startTracking({
+    name: driverName,
+    vehicle: vehicle,
+    rating: rating,
+    color: driverData ? driverData.color : '#7c5cfc',
+    pickup: pickup,
+    dropoff: dropoff,
+    vibe: vibeDef
+  });
+}
+
+function startTracking(opts) {
+  trackingDriver = opts;
+
+  // Populate driver strip
+  const avatarEl = document.getElementById('tracker-driver-avatar');
+  avatarEl.style.background = opts.color;
+  avatarEl.textContent = opts.name.charAt(0);
+  document.getElementById('tracker-driver-name').textContent = opts.name;
+  document.getElementById('tracker-driver-vehicle').textContent = opts.vehicle;
+  document.getElementById('tracker-driver-vibe').innerHTML = opts.vibe.icon + ' ' + opts.vibe.label;
+
+  // Populate locations
+  document.getElementById('tracker-from').textContent = opts.pickup;
+  document.getElementById('tracker-to').textContent = opts.dropoff;
+
+  // Reset UI
+  document.getElementById('tracker-arrived').style.display = 'none';
+  document.getElementById('tracker-progress').style.width = '0%';
+  document.getElementById('tracker-phase-text').textContent = 'Driver is heading to you';
+  document.getElementById('tracker-phase-sub').textContent = 'Sit tight, they\'ll be there soon';
+  document.querySelectorAll('#tracker-rating button').forEach(b => b.classList.remove('active'));
+
+  // Get SVG path
+  const path = document.getElementById('tracker-route-path');
+  const totalLength = path.getTotalLength();
+  const routeDone = document.getElementById('tracker-route-done');
+  routeDone.style.strokeDasharray = `0 ${totalLength}`;
+
+  const car = document.getElementById('tracker-car');
+  const pulse = document.getElementById('tracker-pulse');
+  const etaRing = document.getElementById('tracker-eta-ring');
+  const etaMin = document.getElementById('tracker-eta-min');
+  const circumference = 188.5; // 2 * PI * 30
+
+  const TOTAL_DURATION = 30000; // 30 seconds for the full demo trip
+  const PICKUP_PHASE = 0.25; // first 25% = driving to rider
+  const ARRIVE_PAUSE = 2000; // 2s pause when arriving at pickup
+  let startTime = null;
+  let paused = false;
+  let pauseStart = 0;
+  let totalPauseTime = 0;
+  let arrivedAtPickup = false;
+  let tripDone = false;
+
+  if (trackingInterval) cancelAnimationFrame(trackingInterval);
+
+  function animate(timestamp) {
+    if (!startTime) startTime = timestamp;
+    if (tripDone) return;
+
+    // Handle pause at pickup
+    if (paused) {
+      if (timestamp - pauseStart >= ARRIVE_PAUSE) {
+        paused = false;
+        totalPauseTime += ARRIVE_PAUSE;
+        document.getElementById('tracker-phase-text').textContent = 'En route to destination';
+        document.getElementById('tracker-phase-sub').textContent = 'Enjoy the ride!';
+      } else {
+        trackingInterval = requestAnimationFrame(animate);
+        return;
+      }
+    }
+
+    const elapsed = timestamp - startTime - totalPauseTime;
+    let progress = Math.min(elapsed / TOTAL_DURATION, 1);
+
+    // Trigger pickup arrival
+    if (!arrivedAtPickup && progress >= PICKUP_PHASE) {
+      arrivedAtPickup = true;
+      paused = true;
+      pauseStart = timestamp;
+      progress = PICKUP_PHASE;
+      document.getElementById('tracker-phase-text').textContent = 'Driver has arrived!';
+      document.getElementById('tracker-phase-sub').textContent = 'Head to pickup — hop in!';
+      showToast('Your driver has arrived!');
+    }
+
+    // Move car along path
+    const dist = progress * totalLength;
+    const point = path.getPointAtLength(dist);
+
+    // Get direction for car rotation
+    const nextDist = Math.min(dist + 2, totalLength);
+    const nextPoint = path.getPointAtLength(nextDist);
+    const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
+
+    car.setAttribute('transform', `translate(${point.x}, ${point.y}) rotate(${angle})`);
+    pulse.setAttribute('cx', point.x);
+    pulse.setAttribute('cy', point.y);
+
+    // Progress bar
+    document.getElementById('tracker-progress').style.width = `${progress * 100}%`;
+
+    // Route travelled
+    routeDone.style.strokeDasharray = `${dist} ${totalLength - dist}`;
+
+    // ETA
+    const remainingSec = Math.max(0, Math.round((TOTAL_DURATION - elapsed) / 1000));
+    const remainingMin = Math.ceil(remainingSec / 60);
+    etaMin.textContent = remainingSec <= 60 ? remainingSec + 's' : remainingMin;
+    if (remainingSec <= 60) {
+      etaMin.nextElementSibling.textContent = 'sec';
+    }
+    etaRing.style.strokeDashoffset = circumference * progress;
+
+    // Phase text after pickup
+    if (arrivedAtPickup && !paused && progress > 0.8) {
+      document.getElementById('tracker-phase-text').textContent = 'Almost there!';
+      document.getElementById('tracker-phase-sub').textContent = 'Arriving at destination shortly';
+    }
+
+    // Trip complete
+    if (progress >= 1) {
+      tripDone = true;
+      finishTrip();
+      return;
+    }
+
+    trackingInterval = requestAnimationFrame(animate);
+  }
+
+  trackingInterval = requestAnimationFrame(animate);
+}
+
+function finishTrip() {
+  document.getElementById('tracker-progress').style.width = '100%';
+  document.getElementById('tracker-phase-text').textContent = 'You\'ve arrived!';
+  document.getElementById('tracker-phase-sub').textContent = '';
+
+  // Generate a fake fare
+  const baseFare = (3.50 + Math.random() * 12).toFixed(2);
+  const vibeDef = trackingDriver.vibe;
+
+  document.getElementById('tracker-summary').innerHTML = `
+    <strong>Driver:</strong> ${trackingDriver.name}<br>
+    <strong>Vehicle:</strong> ${trackingDriver.vehicle}<br>
     <strong>Vibe:</strong> ${vibeDef.icon} ${vibeDef.label}<br>
-    <strong>Pickup:</strong> ${pickup}<br>
-    <strong>Drop-off:</strong> ${dropoff}
+    <strong>From:</strong> ${trackingDriver.pickup}<br>
+    <strong>To:</strong> ${trackingDriver.dropoff}<br>
+    <strong>Fare:</strong> $${baseFare}
   `;
 
-  document.getElementById('rider-step2').style.display = 'none';
-  document.getElementById('rider-step3').style.display = 'block';
+  // Show arrived overlay
+  setTimeout(() => {
+    document.getElementById('tracker-arrived').style.display = 'block';
+    // Scroll to it
+    document.getElementById('tracker-arrived').scrollIntoView({ behavior: 'smooth' });
+  }, 500);
+}
+
+function rateVibe(btn, rating) {
+  document.querySelectorAll('#tracker-rating button').forEach((b, i) => {
+    b.classList.toggle('active', i < rating);
+  });
+  showToast(`Rated ${rating}/5 — thanks!`);
+}
+
+function cancelTracking() {
+  if (trackingInterval) cancelAnimationFrame(trackingInterval);
+  trackingInterval = null;
+  backToRequest();
+  showToast('Ride cancelled');
 }
 
 function backToRequest() {
+  if (trackingInterval) {
+    cancelAnimationFrame(trackingInterval);
+    trackingInterval = null;
+  }
   document.getElementById('rider-step1').style.display = 'block';
   document.getElementById('rider-step2').style.display = 'none';
   document.getElementById('rider-step3').style.display = 'none';
+  document.getElementById('rider-step4').style.display = 'none';
 }
 
 // ── Driver profile ──
