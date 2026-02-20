@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeRide - Match Your Ride Vibe</title>
+  <style>
+    :root {
+      --bg: #0f0f1a;
+      --surface: #1a1a2e;
+      --surface2: #22223a;
+      --accent: #7c5cfc;
+      --accent-glow: rgba(124, 92, 252, 0.3);
+      --green: #34d399;
+      --text: #e8e8f0;
+      --muted: #8888a8;
+      --border: #2a2a44;
+      --danger: #f87171;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--accent); }
+
+    nav { display: flex; gap: 4px; }
+    nav button {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    nav button:hover { color: var(--text); border-color: var(--muted); }
+    nav button.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    /* ── Inputs ── */
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 15px;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    /* ── Location inputs ── */
+    .location-group {
+      position: relative;
+      padding-left: 28px;
+      margin-bottom: 8px;
+    }
+    .location-group::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 30px;
+      bottom: 28px;
+      width: 2px;
+      background: var(--border);
+    }
+    .dot {
+      position: absolute;
+      left: 3px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+    }
+    .dot.pickup { top: 32px; background: var(--accent); }
+    .dot.dropoff { bottom: 28px; background: transparent; }
+
+    /* ── Vibe chips ── */
+    .vibes-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .vibe-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+      font-size: 14px;
+    }
+    .vibe-chip:hover { border-color: var(--muted); }
+    .vibe-chip.selected {
+      border-color: var(--accent);
+      background: rgba(124, 92, 252, 0.12);
+    }
+    .vibe-chip .icon { font-size: 20px; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      filter: none;
+    }
+    .btn-secondary {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+
+    /* ── Driver card ── */
+    .driver-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+      transition: all 0.2s;
+    }
+    .driver-card:hover { border-color: var(--accent); }
+    .driver-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .driver-name {
+      font-size: 17px;
+      font-weight: 600;
+    }
+    .driver-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .driver-meta .rating { color: #fbbf24; }
+    .match-badge {
+      margin-left: auto;
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--green);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .driver-vibes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .driver-vibe-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--surface2);
+      color: var(--muted);
+    }
+    .driver-vibe-tag.match {
+      background: rgba(124, 92, 252, 0.15);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .driver-vehicle {
+      font-size: 13px;
+      color: var(--muted);
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .select-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .select-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ── Confirmation ── */
+    .confirm-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .confirm-box .checkmark {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .confirm-box h3 { margin-bottom: 16px; }
+    .confirm-details {
+      text-align: left;
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .confirm-details strong { color: var(--accent); }
+
+    /* ── Driver profile page ── */
+    .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 auto 16px;
+    }
+    .profile-stat {
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+      margin: 16px 0;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-stat .val { font-size: 20px; font-weight: 700; }
+    .profile-stat .lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .success-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--green);
+      color: #0f0f1a;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+    .success-toast.show { transform: translateX(-50%) translateY(0); }
+
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+    .no-results .icon { font-size: 40px; margin-bottom: 12px; }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    /* animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.3s ease forwards; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Vibe<span>Ride</span></div>
+  <nav>
+    <button class="active" onclick="showPage('rider')">Ride</button>
+    <button onclick="showPage('driver')">Drive</button>
+  </nav>
+</header>
+
+<!-- ═══════════════ RIDER PAGE ═══════════════ -->
+<div id="rider-page" class="page active">
+  <div class="container">
+
+    <!-- Step 1: Request -->
+    <div id="rider-step1">
+      <h2>Where to?</h2>
+
+      <div class="location-group">
+        <div class="dot pickup"></div>
+        <div class="dot dropoff"></div>
+        <label for="pickup">Pickup</label>
+        <input type="text" id="pickup" placeholder="Enter pickup location">
+        <label for="dropoff">Drop-off</label>
+        <input type="text" id="dropoff" placeholder="Enter destination">
+      </div>
+
+      <div class="section-divider"></div>
+
+      <h3>Choose your ride vibe</h3>
+      <div class="vibes-grid" id="rider-vibes"></div>
+
+      <button class="btn-primary" id="find-btn" disabled onclick="findDrivers()">
+        Find Matching Drivers
+      </button>
+    </div>
+
+    <!-- Step 2: Results -->
+    <div id="rider-step2" style="display:none">
+      <h2>Your Matches</h2>
+      <p style="color:var(--muted); margin:-16px 0 20px; font-size:14px;" id="match-subtitle"></p>
+      <div id="results-list"></div>
+      <button class="btn-secondary" onclick="backToRequest()">Change preferences</button>
+    </div>
+
+    <!-- Step 3: Confirmation -->
+    <div id="rider-step3" style="display:none">
+      <div class="confirm-box fade-in">
+        <div class="checkmark">&#10003;</div>
+        <h3>Ride Confirmed!</h3>
+        <p style="color:var(--muted); font-size:14px; margin-bottom:8px;">Your driver is on the way</p>
+        <div class="confirm-details" id="confirm-details"></div>
+        <button class="btn-primary" onclick="backToRequest()">Book Another Ride</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ DRIVER PAGE ═══════════════ -->
+<div id="driver-page" class="page">
+  <div class="container">
+
+    <div id="driver-step1">
+      <h2>Driver Profile</h2>
+
+      <label for="driver-name">Your Name</label>
+      <input type="text" id="driver-name" placeholder="Enter your name">
+
+      <label for="driver-vehicle">Vehicle</label>
+      <input type="text" id="driver-vehicle" placeholder="e.g. 2024 Toyota Camry">
+
+      <h3>Vibes you support</h3>
+      <p style="color:var(--muted); font-size:13px; margin:-4px 0 14px;">Select all that apply</p>
+      <div class="vibes-grid" id="driver-vibes"></div>
+
+      <button class="btn-primary" id="save-profile-btn" disabled onclick="saveProfile()">
+        Save Profile
+      </button>
+    </div>
+
+    <div id="driver-step2" style="display:none">
+      <div class="profile-card fade-in">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <h3 style="text-align:center" id="profile-name"></h3>
+        <p style="text-align:center; color:var(--muted); font-size:14px;" id="profile-vehicle"></p>
+        <div class="profile-stat">
+          <div><div class="val" style="color:#fbbf24;">5.0</div><div class="lbl">Rating</div></div>
+          <div><div class="val">0</div><div class="lbl">Trips</div></div>
+          <div><div class="val" id="profile-vibe-count">0</div><div class="lbl">Vibes</div></div>
+        </div>
+        <h3>Your Vibes</h3>
+        <div class="vibes-grid" id="profile-vibes"></div>
+      </div>
+      <button class="btn-secondary" onclick="editProfile()">Edit Profile</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="success-toast" id="toast"></div>
+
+<script>
+// ── Vibe definitions ──
+const VIBES = [
+  { id: 'chill',    icon: '&#127749;', label: 'Chill & Quiet',     desc: 'Peaceful, minimal conversation' },
+  { id: 'chat',     icon: '&#128172;', label: 'Chat & Connect',    desc: 'Friendly conversation welcome' },
+  { id: 'music',    icon: '&#127925;', label: 'Music Lover',       desc: 'Great playlists, volume up' },
+  { id: 'party',    icon: '&#127881;', label: 'Party Mode',        desc: 'High energy, good times' },
+  { id: 'focus',    icon: '&#128187;', label: 'Work & Focus',      desc: 'Quiet space, get things done' },
+  { id: 'podcast',  icon: '&#127911;', label: 'Podcast & Learn',   desc: 'Discover something new' },
+];
+
+// ── Hardcoded driver dataset ──
+const DRIVERS = [
+  { name: 'Marcus Johnson',  vehicle: '2024 Tesla Model 3 - Black',      vibes: ['chill','focus','podcast'],       rating: 4.95, trips: 1243, color: '#6366f1' },
+  { name: 'Priya Patel',     vehicle: '2023 Toyota Camry - Silver',       vibes: ['chat','music','party'],          rating: 4.88, trips: 876,  color: '#ec4899' },
+  { name: 'David Kim',       vehicle: '2024 Honda Accord - White',        vibes: ['chill','music','focus'],         rating: 4.92, trips: 2105, color: '#14b8a6' },
+  { name: 'Sofia Rodriguez', vehicle: '2023 Hyundai Ioniq 5 - Blue',      vibes: ['chat','podcast','party','music'],rating: 4.97, trips: 1580, color: '#f59e0b' },
+  { name: 'James Chen',      vehicle: '2024 BMW 3 Series - Gray',         vibes: ['chill','focus'],                 rating: 4.90, trips: 934,  color: '#8b5cf6' },
+  { name: 'Aaliyah Brooks',  vehicle: '2023 Kia EV6 - Green',             vibes: ['party','music','chat'],          rating: 4.85, trips: 612,  color: '#ef4444' },
+  { name: 'Raj Gupta',       vehicle: '2024 Chevrolet Bolt - Red',        vibes: ['podcast','chat','chill'],        rating: 4.93, trips: 1890, color: '#0ea5e9' },
+  { name: 'Emma Wilson',     vehicle: '2023 Subaru Outback - Forest Green',vibes: ['chill','podcast','music','focus'],rating: 4.91, trips: 1456, color: '#22c55e' },
+];
+
+// ── State ──
+let riderVibe = null;
+let driverVibes = new Set();
+
+// ── Render vibe chips ──
+function renderVibeChips(containerId, mode) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = VIBES.map(v => `
+    <div class="vibe-chip" data-vibe="${v.id}" onclick="${mode === 'single' ? 'selectRiderVibe' : 'toggleDriverVibe'}('${v.id}', this)">
+      <span class="icon">${v.icon}</span>
+      <span>${v.label}</span>
+    </div>
+  `).join('');
+}
+
+renderVibeChips('rider-vibes', 'single');
+renderVibeChips('driver-vibes', 'multi');
+
+function selectRiderVibe(id, el) {
+  document.querySelectorAll('#rider-vibes .vibe-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  riderVibe = id;
+  updateFindBtn();
+}
+
+function toggleDriverVibe(id, el) {
+  el.classList.toggle('selected');
+  if (driverVibes.has(id)) driverVibes.delete(id);
+  else driverVibes.add(id);
+  updateSaveBtn();
+}
+
+function updateFindBtn() {
+  const pickup = document.getElementById('pickup').value.trim();
+  const dropoff = document.getElementById('dropoff').value.trim();
+  document.getElementById('find-btn').disabled = !(pickup && dropoff && riderVibe);
+}
+
+function updateSaveBtn() {
+  const name = document.getElementById('driver-name').value.trim();
+  const vehicle = document.getElementById('driver-vehicle').value.trim();
+  document.getElementById('save-profile-btn').disabled = !(name && vehicle && driverVibes.size > 0);
+}
+
+document.getElementById('pickup').addEventListener('input', updateFindBtn);
+document.getElementById('dropoff').addEventListener('input', updateFindBtn);
+document.getElementById('driver-name').addEventListener('input', updateSaveBtn);
+document.getElementById('driver-vehicle').addEventListener('input', updateSaveBtn);
+
+// ── Matching ──
+function findDrivers() {
+  const pickup = document.getElementById('pickup').value.trim();
+  const dropoff = document.getElementById('dropoff').value.trim();
+
+  // Score each driver
+  const scored = DRIVERS.map(d => {
+    const hasVibe = d.vibes.includes(riderVibe);
+    const matchCount = d.vibes.filter(v => v === riderVibe).length;
+    const score = hasVibe ? (d.rating * 20 + d.trips / 100) : 0;
+    return { ...d, hasVibe, score };
+  });
+
+  // Sort: matching drivers first (by score), then non-matching
+  scored.sort((a, b) => b.score - a.score);
+  const matches = scored.filter(d => d.hasVibe);
+  const others = scored.filter(d => !d.hasVibe);
+
+  const vibeDef = VIBES.find(v => v.id === riderVibe);
+
+  document.getElementById('match-subtitle').textContent =
+    `${matches.length} driver${matches.length !== 1 ? 's' : ''} match your "${vibeDef.label}" vibe`;
+
+  const list = document.getElementById('results-list');
+
+  if (matches.length === 0) {
+    list.innerHTML = `
+      <div class="no-results">
+        <div class="icon">&#128533;</div>
+        <p>No drivers match your vibe right now.</p>
+        <p style="margin-top:8px">Try a different vibe!</p>
+      </div>`;
+  } else {
+    list.innerHTML = matches.map((d, i) => `
+      <div class="driver-card fade-in" style="animation-delay:${i * 0.08}s">
+        <div class="driver-header">
+          <div class="avatar" style="background:${d.color}">${d.name.charAt(0)}</div>
+          <div>
+            <div class="driver-name">${d.name}</div>
+            <div class="driver-meta">
+              <span class="rating">&#9733; ${d.rating}</span> &middot; ${d.trips.toLocaleString()} trips
+            </div>
+          </div>
+          <div class="match-badge">&#10003; Vibe Match</div>
+        </div>
+        <div class="driver-vibes">
+          ${d.vibes.map(v => {
+            const vd = VIBES.find(x => x.id === v);
+            return `<span class="driver-vibe-tag ${v === riderVibe ? 'match' : ''}">${vd.icon} ${vd.label}</span>`;
+          }).join('')}
+        </div>
+        <div class="driver-vehicle">&#128663; ${d.vehicle}</div>
+        <button class="select-btn" onclick="confirmRide('${d.name}', '${d.vehicle}', ${d.rating})">
+          Select ${d.name.split(' ')[0]}
+        </button>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('rider-step1').style.display = 'none';
+  document.getElementById('rider-step2').style.display = 'block';
+}
+
+function confirmRide(driverName, vehicle, rating) {
+  const pickup = document.getElementById('pickup').value.trim();
+  const dropoff = document.getElementById('dropoff').value.trim();
+  const vibeDef = VIBES.find(v => v.id === riderVibe);
+
+  document.getElementById('confirm-details').innerHTML = `
+    <strong>Driver:</strong> ${driverName}<br>
+    <strong>Vehicle:</strong> ${vehicle}<br>
+    <strong>Rating:</strong> &#9733; ${rating}<br>
+    <strong>Vibe:</strong> ${vibeDef.icon} ${vibeDef.label}<br>
+    <strong>Pickup:</strong> ${pickup}<br>
+    <strong>Drop-off:</strong> ${dropoff}
+  `;
+
+  document.getElementById('rider-step2').style.display = 'none';
+  document.getElementById('rider-step3').style.display = 'block';
+}
+
+function backToRequest() {
+  document.getElementById('rider-step1').style.display = 'block';
+  document.getElementById('rider-step2').style.display = 'none';
+  document.getElementById('rider-step3').style.display = 'none';
+}
+
+// ── Driver profile ──
+function saveProfile() {
+  const name = document.getElementById('driver-name').value.trim();
+  const vehicle = document.getElementById('driver-vehicle').value.trim();
+
+  const colors = ['#6366f1','#ec4899','#14b8a6','#f59e0b','#8b5cf6','#ef4444','#0ea5e9','#22c55e'];
+  const color = colors[Math.floor(Math.random() * colors.length)];
+
+  document.getElementById('profile-avatar').style.background = color;
+  document.getElementById('profile-avatar').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('profile-name').textContent = name;
+  document.getElementById('profile-vehicle').textContent = vehicle;
+  document.getElementById('profile-vibe-count').textContent = driverVibes.size;
+
+  document.getElementById('profile-vibes').innerHTML = [...driverVibes].map(v => {
+    const vd = VIBES.find(x => x.id === v);
+    return `<div class="vibe-chip selected"><span class="icon">${vd.icon}</span><span>${vd.label}</span></div>`;
+  }).join('');
+
+  // Add driver to dataset
+  DRIVERS.push({ name, vehicle, vibes: [...driverVibes], rating: 5.0, trips: 0, color });
+
+  document.getElementById('driver-step1').style.display = 'none';
+  document.getElementById('driver-step2').style.display = 'block';
+  showToast('Profile saved! You\'re ready to drive.');
+}
+
+function editProfile() {
+  document.getElementById('driver-step1').style.display = 'block';
+  document.getElementById('driver-step2').style.display = 'none';
+}
+
+// ── Navigation ──
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(`${page}-page`).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+
+</body>
+</html>
